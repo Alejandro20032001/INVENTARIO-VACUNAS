@@ -18,6 +18,7 @@ public class Vaccine {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
+    private boolean delete = Boolean.FALSE;
 
     @Column(name = "deleted_date")
     private Date deletedDate;
