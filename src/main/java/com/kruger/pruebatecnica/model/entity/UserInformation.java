@@ -11,7 +11,7 @@ import java.util.Date;
 @Entity
 @Getter
 @Setter
-@Table(name = "user-information")
+@Table(name = "user_information")
 @Where(clause = "delete=false")
 public class UserInformation {
     @Id
