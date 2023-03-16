@@ -22,12 +22,13 @@ public class User {
 
     private String username;
     private String password;
+    private boolean delete = Boolean.FALSE;
 
     @OneToOne
     @JoinColumn(name = "id_user_information")
     private UserInformation userInformation;
 
-    private boolean delete = Boolean.FALSE;
+
     @Column(name = "deleted_date")
     private Date deletedDate;
     @Column(name = "deleted_by")
