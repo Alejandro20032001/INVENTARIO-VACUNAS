@@ -14,6 +14,10 @@ import java.util.Date;
 @Table(name = "user-information")
 @Where(clause = "delete=false")
 public class UserInformation {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
     private String name;
     @Column(name = "last_name")
     private String lastName;
@@ -22,7 +26,11 @@ public class UserInformation {
     private Date birthDate;
     private String phone;
     private String address;
-    //private Vaccination vaccination;
+
+    @OneToOne
+    @JoinColumn(name = "id_vaccination")
+    private Vaccination vaccination;
+
     private boolean delete = Boolean.FALSE;
     @Column(name = "deleted_date")
     private Date deletedDate;

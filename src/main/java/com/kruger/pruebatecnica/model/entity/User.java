@@ -13,7 +13,7 @@ import java.util.Date;
 @Entity
 @Getter
 @Setter
-@Table(name = "user")
+@Table(name = "user", schema = "public")
 @Where(clause = "delete=false")
 public class User {
     @Id
@@ -22,6 +22,10 @@ public class User {
 
     private String username;
     private String password;
+
+    @OneToOne
+    @JoinColumn(name = "id_user_information")
+    private UserInformation userInformation;
 
     private boolean delete = Boolean.FALSE;
     @Column(name = "deleted_date")

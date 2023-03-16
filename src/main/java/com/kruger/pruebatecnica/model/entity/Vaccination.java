@@ -19,7 +19,10 @@ public class Vaccination {
     private int id;
     @Column(name = "vaccination_date")
     private Date vaccinationDate;
-    //private Vaccine vaccine;
+
+    @OneToOne
+    @JoinColumn(name = "id_user_information")
+    private Vaccine vaccine;
 
     @Column(name = "deleted_date")
     private Date deletedDate;
