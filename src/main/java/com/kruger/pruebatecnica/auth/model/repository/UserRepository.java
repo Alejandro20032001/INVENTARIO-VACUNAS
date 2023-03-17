@@ -1,11 +1,12 @@
-package com.kruger.pruebatecnica.model.repository;
+package com.kruger.pruebatecnica.auth.model.repository;
 
-import com.kruger.pruebatecnica.model.entity.User;
+import com.kruger.pruebatecnica.auth.model.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
     @Query(value = """
@@ -42,4 +43,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
             WHERE u.delete = false AND ui.delete = false AND v.delete = false
             AND va.name = :vaccineName""", nativeQuery = true)
     List findByVaccineName(@Param("vaccineName") String vaccineName);
+    Optional<User> findByUsername(String username);
+    boolean existsByUsername(String username);
 }
