@@ -26,6 +26,7 @@ public class UserInformation {
     private Date birthDate;
     private String phone;
     private String address;
+    private int dni;
 
     @OneToOne
     @JoinColumn(name = "id_vaccination")
