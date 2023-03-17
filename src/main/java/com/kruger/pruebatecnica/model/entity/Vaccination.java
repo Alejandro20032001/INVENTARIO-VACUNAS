@@ -21,8 +21,11 @@ public class Vaccination {
     private Date vaccinationDate;
 
     @OneToOne
-    @JoinColumn(name = "id_user_information")
+    @JoinColumn(name = "id_vaccine")
     private Vaccine vaccine;
+    private int doseNumber;
+
+    private boolean delete = Boolean.FALSE;
 
     @Column(name = "deleted_date")
     private Date deletedDate;

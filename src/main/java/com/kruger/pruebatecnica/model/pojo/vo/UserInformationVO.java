@@ -15,5 +15,5 @@ public class UserInformationVO {
     private Date birthDate;
     private String phone;
     private String address;
-    private Vaccination vaccination;
+    private VaccinationVO vaccinationVO;
 }

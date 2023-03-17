@@ -11,7 +11,7 @@ import java.util.Date;
 @Entity
 @Getter
 @Setter
-@Table(name = "user-information")
+@Table(name = "user_information")
 @Where(clause = "delete=false")
 public class UserInformation {
     @Id
@@ -26,6 +26,7 @@ public class UserInformation {
     private Date birthDate;
     private String phone;
     private String address;
+    private int dni;
 
     @OneToOne
     @JoinColumn(name = "id_vaccination")

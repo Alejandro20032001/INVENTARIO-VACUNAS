@@ -10,5 +10,6 @@ import java.util.Date;
 @Setter
 public class VaccinationVO {
     private Date vaccinationDate;
-    private Vaccine vaccine;
+    private VaccineVO vaccineVO;
+    private int doseNumber;
 }

@@ -15,4 +15,5 @@ public class UserInformationDTO {
     private String phone;
     private String address;
     private int idVaccination;
+    private int dni;
 }
