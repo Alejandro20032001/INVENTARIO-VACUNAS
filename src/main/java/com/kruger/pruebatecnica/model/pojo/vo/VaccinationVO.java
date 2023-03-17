@@ -11,4 +11,5 @@ import java.util.Date;
 public class VaccinationVO {
     private Date vaccinationDate;
     private VaccineVO vaccineVO;
+    private int doseNumber;
 }
