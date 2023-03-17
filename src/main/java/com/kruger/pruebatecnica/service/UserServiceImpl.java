@@ -80,15 +80,22 @@ public class UserServiceImpl implements UserService{
         }
         return listUserVO;
     }
-
     @Override
     public UserVO persistUser(UserDTO userDTO) {
-        return null;
+        User user = null;
+        Optional <UserInformation> userInformation = userInformationRepository.findById(userDTO.getIdUserInformation());
+        if(userInformation.isPresent()){
+            user = new User();
+            user.setUsername(userDTO.getUsername());
+            user.setPassword(userDTO.getPassword());
+            user.setUserInformation(userInformation.get());
+            user = userRepository.save(user);
+        }
+        return entityToVO(user);
     }
-
     @Override
     public void deleteUser(int idUser) {
-
+        userRepository.deleteById(idUser);
     }
 
     @Override
