@@ -1,8 +1,7 @@
-package com.kruger.pruebatecnica.service;
+package com.kruger.pruebatecnica.auth.service;
 
-import com.kruger.pruebatecnica.model.entity.User;
+import com.kruger.pruebatecnica.auth.model.entity.User;
 import com.kruger.pruebatecnica.model.entity.UserInformation;
-import com.kruger.pruebatecnica.model.entity.Vaccination;
 import com.kruger.pruebatecnica.model.entity.Vaccine;
 import com.kruger.pruebatecnica.model.pojo.dto.UserDTO;
 import com.kruger.pruebatecnica.model.pojo.vo.UserInformationVO;
@@ -10,7 +9,7 @@ import com.kruger.pruebatecnica.model.pojo.vo.UserVO;
 import com.kruger.pruebatecnica.model.pojo.vo.VaccinationVO;
 import com.kruger.pruebatecnica.model.pojo.vo.VaccineVO;
 import com.kruger.pruebatecnica.model.repository.UserInformationRepository;
-import com.kruger.pruebatecnica.model.repository.UserRepository;
+import com.kruger.pruebatecnica.auth.model.repository.UserRepository;
 import com.kruger.pruebatecnica.model.repository.VaccineRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,8 +85,8 @@ public class UserServiceImpl implements UserService{
         Optional <UserInformation> userInformation = userInformationRepository.findById(userDTO.getIdUserInformation());
         if(userInformation.isPresent()){
             user = new User();
-            user.setUsername(userDTO.getUsername());
-            user.setPassword(userDTO.getPassword());
+            //user.setUsername(userDTO.getUsername());
+            //user.setPassword(userDTO.getPassword());
             user.setUserInformation(userInformation.get());
             user = userRepository.save(user);
         }
@@ -103,6 +102,20 @@ public class UserServiceImpl implements UserService{
         UserVO userVO = new UserVO();
         BeanUtils.copyProperties(user, userVO);
         return userVO;
+    }
+
+    @Override
+    public Optional<User> findByUsername(String username) {
+        Optional<User> user = userRepository.findByUsername(username);
+        if(user.isPresent())
+            return user;
+        else
+            return Optional.empty();
+    }
+
+    @Override
+    public Boolean existsByUsername(String username) {
+        return userRepository.existsByUsername(username);
     }
 
     private UserVO objectToVO(Object[] o){

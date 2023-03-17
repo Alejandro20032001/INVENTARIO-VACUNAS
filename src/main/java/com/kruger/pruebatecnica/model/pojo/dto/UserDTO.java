@@ -7,11 +7,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserDTO {
-    @NotNull(message = "This field cannot be null")
+    /*@NotNull(message = "This field cannot be null")
     private String username;
 
     @NotNull(message = "This field cannot be null")
-    private String password;
+    private String password;*/
 
     @NotNull(message = "This field cannot be null")
     private int idUserInformation;

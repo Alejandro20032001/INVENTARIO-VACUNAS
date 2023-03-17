@@ -1,6 +1,6 @@
-package com.kruger.pruebatecnica.service;
+package com.kruger.pruebatecnica.auth.service;
 
-import com.kruger.pruebatecnica.model.entity.User;
+import com.kruger.pruebatecnica.auth.model.entity.User;
 import com.kruger.pruebatecnica.model.pojo.dto.UserDTO;
 import com.kruger.pruebatecnica.model.pojo.vo.UserVO;
 
@@ -15,4 +15,6 @@ public interface UserService {
     UserVO persistUser(UserDTO userDTO);
     void deleteUser(int idUser);
     UserVO entityToVO (User user);
+    Optional <User> findByUsername(String username);
+    Boolean existsByUsername(String username);
 }
