@@ -7,9 +7,10 @@ import com.kruger.pruebatecnica.model.pojo.vo.UserInformationVO;
 import java.util.Optional;
 
 public interface UserInformationService {
-    Optional<UserInformationVO> findById(int id);
+    Optional<UserInformationVO> findByIdVO(int id);
+    Optional<UserInformation> findById(int id);
     UserInformationVO persistUserInformation(UserInformationDTO userInformationDTO);
     void deleteUserInformation(int idUserInformation);
-    void updateUserInformation(UserInformationDTO userInformationDTO);
+    void updateUserInformation(int idUserInformation, UserInformationDTO userInformationDTO);
     UserInformationVO entityToVO (UserInformation userInformation);
 }
