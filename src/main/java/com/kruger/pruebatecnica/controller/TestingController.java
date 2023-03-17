@@ -3,7 +3,7 @@ package com.kruger.pruebatecnica.controller;
 import com.kruger.pruebatecnica.commons.ResultResponse;
 import com.kruger.pruebatecnica.model.enums.HttpResponseMessage;
 import com.kruger.pruebatecnica.model.pojo.vo.UserVO;
-import com.kruger.pruebatecnica.service.UserService;
+import com.kruger.pruebatecnica.auth.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
