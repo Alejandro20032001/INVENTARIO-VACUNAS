@@ -8,6 +8,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -18,6 +20,19 @@ public class VaccineServiceImpl implements VaccineService{
         this.vaccineRepository = vaccineRepository;
     }
 
+    @Override
+    public List<Vaccine> findAll() {
+        return vaccineRepository.findAll();
+    }
+    @Override
+    public List<VaccineVO> findAllVO() {
+        List<Vaccine> list = vaccineRepository.findAll();
+        List<VaccineVO> listVO = new ArrayList<>();
+        for (Vaccine vaccine : list) {
+            listVO.add(entityToVO(vaccine));
+        }
+        return listVO;
+    }
     @Override
     public Optional<VaccineVO> findByIdVO(int id) {
         Vaccine vaccine = vaccineRepository.findById(id).get();
