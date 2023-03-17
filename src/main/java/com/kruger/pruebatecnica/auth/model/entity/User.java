@@ -1,13 +1,18 @@
-package com.kruger.pruebatecnica.model.entity;
+package com.kruger.pruebatecnica.auth.model.entity;
 
 
+import com.kruger.pruebatecnica.model.entity.UserInformation;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Where;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Date;
+import java.util.*;
 
 
 @Entity
@@ -15,7 +20,7 @@ import java.util.Date;
 @Setter
 @Table(name = "user", schema = "public")
 @Where(clause = "delete=false")
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -27,6 +32,13 @@ public class User {
     @OneToOne
     @JoinColumn(name = "id_user_information")
     private UserInformation userInformation;
+
+    @NotNull
+    @ManyToMany
+    @JoinTable(name = "user_rol", schema = "public",
+            joinColumns = @JoinColumn(name = "id_user"),
+            inverseJoinColumns = @JoinColumn(name = "id_rol"))
+    private Set<Rol> rols = new HashSet<>();
 
 
     @Column(name = "deleted_date")
@@ -71,5 +83,36 @@ public class User {
             this.deletedBy = "";
         }
         this.deletedDate = new Date();
+    }
+
+    public void addRol(Rol rol){
+        this.rols.add(rol);
+    }
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        for(Rol rol: rols){
+            authorities.add(new SimpleGrantedAuthority(rol.getRolName().toString()));
+        }
+        return authorities;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }
