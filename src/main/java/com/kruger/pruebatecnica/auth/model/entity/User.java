@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Where;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,7 +18,6 @@ import java.util.*;
 @Getter
 @Setter
 @Table(name = "user", schema = "public")
-@Where(clause = "delete=false")
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +32,9 @@ public class User implements UserDetails {
     private UserInformation userInformation;
 
     @NotNull
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {
+            CascadeType.PERSIST
+    })
     @JoinTable(name = "user_rol", schema = "public",
             joinColumns = @JoinColumn(name = "id_user"),
             inverseJoinColumns = @JoinColumn(name = "id_rol"))
@@ -90,11 +90,8 @@ public class User implements UserDetails {
     }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        System.out.println("llega aqui");
-        System.out.println(rols.toString());
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
         for(Rol rol: rols){
-            System.out.println(rol.getRolName());
             authorities.add(new SimpleGrantedAuthority(rol.getRolName().toString()));
         }
         return authorities;
