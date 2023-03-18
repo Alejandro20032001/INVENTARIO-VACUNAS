@@ -22,7 +22,6 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
     private String username;
     private String password;
     private boolean delete = Boolean.FALSE;
@@ -87,6 +86,9 @@ public class User implements UserDetails {
 
     public void addRol(Rol rol){
         this.rols.add(rol);
+    }
+    public boolean getDelete (){
+        return this.delete;
     }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

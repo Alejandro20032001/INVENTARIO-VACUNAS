@@ -44,14 +44,15 @@ public class UserServiceImpl implements UserService{
         List<User> list = userRepository.findAll();
         List<UserVO> listVO = new ArrayList<>();
         for(User user: list){
-            listVO.add(entityToVO(user));
+            if(!user.getDelete())
+                listVO.add(entityToVO(user));
         }
         return listVO;
     }
     @Override
     public Optional<User> findById(int id) {
         User user = userRepository.findById(id).get();
-        if(user != null)
+        if(user != null && !user.getDelete())
             return Optional.of(user);
         else
             return Optional.empty();
@@ -59,7 +60,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public Optional<UserVO> findByIdVO(int id) {
         User user = userRepository.findById(id).get();
-        if(user != null)
+        if(user != null && !user.getDelete())
             return Optional.of(entityToVO(user));
         else
             return Optional.empty();
@@ -126,7 +127,9 @@ public class UserServiceImpl implements UserService{
     }
     @Override
     public void deleteUser(int idUser) {
-        userRepository.deleteById(idUser);
+        User user = userRepository.findById(idUser).get();
+        user.setDelete(true);
+        userRepository.save(user);
     }
 
     @Override

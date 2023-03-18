@@ -6,6 +6,7 @@ import com.kruger.pruebatecnica.service.VaccinationService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -36,6 +37,7 @@ public class VaccinationController {
                 .build(), ResponseEntity.ok().build().getStatusCode());
     }
     @GetMapping("/vo/{id}")
+    @PreAuthorize("hasAuthority('EMPLOYEE')")
     public ResponseEntity<?> findByIdVO(@PathVariable int id) {
         Optional<Vaccination> vaccination = vaccinationService.findById(id);
         if (vaccination.isPresent())
@@ -50,6 +52,7 @@ public class VaccinationController {
                 .build(), ResponseEntity.notFound().build().getStatusCode());
     }
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('EMPLOYEE')")
     public ResponseEntity<?> findById(@PathVariable int id) {
         Optional<Vaccination> vaccination = vaccinationService.findById(id);
         if (vaccination.isPresent())
@@ -64,6 +67,7 @@ public class VaccinationController {
                 .build(), ResponseEntity.notFound().build().getStatusCode());
     }
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('EMPLOYEE')")
     public ResponseEntity<?> deleteById(@PathVariable int id) {
         Optional<Vaccination> vaccination = vaccinationService.findById(id);
         if (vaccination.isPresent()) {

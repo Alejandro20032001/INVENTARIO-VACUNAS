@@ -25,7 +25,7 @@ public class UserController {
     }
 
     @GetMapping("/vo")
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> findAllVO() {
         List<UserVO> lista = userService.findAllVO();
         return new ResponseEntity<>(ResultResponse.builder()
@@ -44,6 +44,7 @@ public class UserController {
                 .build(), ResponseEntity.ok().build().getStatusCode());
     }
     @GetMapping("/vo/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> findByIdVO(@PathVariable int id) {
         Optional<UserVO> user = userService.findByIdVO(id);
         if (user.isPresent())
@@ -58,6 +59,7 @@ public class UserController {
                 .build(), ResponseEntity.notFound().build().getStatusCode());
     }
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> findById(@PathVariable int id) {
         Optional<User> user = userService.findById(id);
         if (user.isPresent())
@@ -71,7 +73,8 @@ public class UserController {
                 .message("Not found")
                 .build(), ResponseEntity.notFound().build().getStatusCode());
     }
-    @GetMapping("vaccinated")
+    @GetMapping("/vaccinated")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> findAllVaccinated() {
         return new ResponseEntity<>(ResultResponse.builder()
                 .status(true)
@@ -80,6 +83,7 @@ public class UserController {
                 .build(), ResponseEntity.ok().build().getStatusCode());
     }
     @GetMapping("/non-vaccinated")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> findAllNonVaccinated() {
         return new ResponseEntity<>(ResultResponse.builder()
                 .status(true)
@@ -88,6 +92,7 @@ public class UserController {
                 .build(), ResponseEntity.ok().build().getStatusCode());
     }
     @GetMapping("/by-vaccine-name/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> findAllByVaccineName(@PathVariable int id) {
         return new ResponseEntity<>(ResultResponse.builder()
                 .status(true)
@@ -96,6 +101,7 @@ public class UserController {
                 .build(), ResponseEntity.ok().build().getStatusCode());
     }
     @PostMapping("")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> save(@RequestBody RegisterUserDTO userDTO) {
         return new ResponseEntity<>(ResultResponse.builder()
                 .status(true)
@@ -104,6 +110,7 @@ public class UserController {
                 .build(), ResponseEntity.ok().build().getStatusCode());
     }
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> delete(@PathVariable int id) {
         Optional<User> user = userService.findById(id);
         if (!user.isPresent())

@@ -8,6 +8,7 @@ import com.kruger.pruebatecnica.service.UserInformationService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -23,6 +24,7 @@ public class UserInformationController {
     }
 
     @GetMapping("/vo/{id}")
+    @PreAuthorize("hasAuthority('EMPLOYEE')")
     public ResponseEntity<?> findByIdVO(@PathVariable int id) {
         Optional<UserInformation> vaccination = userInformationService.findById(id);
         if (vaccination.isPresent())
@@ -37,6 +39,7 @@ public class UserInformationController {
                 .build(), ResponseEntity.notFound().build().getStatusCode());
     }
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('EMPLOYEE')")
     public ResponseEntity<?> findById(@PathVariable int id) {
         Optional<UserInformation> vaccination = userInformationService.findById(id);
         if (vaccination.isPresent())
@@ -59,6 +62,7 @@ public class UserInformationController {
                 .build(), ResponseEntity.ok().build().getStatusCode());
     }
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('EMPLOYEE')")
     public ResponseEntity<?> update(@PathVariable("id")int id, @RequestBody UpdateInformationDTO updateInformationDTO) {
         return new ResponseEntity<>(ResultResponse.builder()
                 .status(true)
@@ -67,6 +71,7 @@ public class UserInformationController {
                 .build(), ResponseEntity.ok().build().getStatusCode());
     }
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> delete(@PathVariable int id) {
         Optional <UserInformation> userInformation = userInformationService.findById(id);
         if(!userInformation.isPresent())

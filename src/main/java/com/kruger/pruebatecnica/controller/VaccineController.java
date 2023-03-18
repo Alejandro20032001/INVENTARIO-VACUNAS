@@ -7,6 +7,7 @@ import com.kruger.pruebatecnica.service.VaccineService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -22,6 +23,7 @@ public class VaccineController {
     }
 
     @GetMapping("/vo")
+    @PreAuthorize("hasAuthority(['ADMIN', 'EMPLOYEE'])")
     public ResponseEntity<?> findAllVO() {
         return new ResponseEntity<>(ResultResponse.builder()
                 .status(true)
@@ -30,6 +32,7 @@ public class VaccineController {
                 .build(), ResponseEntity.ok().build().getStatusCode());
     }
     @GetMapping("")
+    @PreAuthorize("hasAuthority(['ADMIN', 'EMPLOYEE'])")
     public ResponseEntity<?> findAll() {
         return new ResponseEntity<>(ResultResponse.builder()
                 .status(true)
@@ -38,6 +41,7 @@ public class VaccineController {
                 .build(), ResponseEntity.ok().build().getStatusCode());
     }
     @PostMapping("")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> save(@RequestBody VaccineDTO dto) {
         return new ResponseEntity<>(ResultResponse.builder()
                 .status(true)
@@ -46,6 +50,7 @@ public class VaccineController {
                 .build(), ResponseEntity.ok().build().getStatusCode());
     }
     @GetMapping("/vo/{id}")
+    @PreAuthorize("hasAuthority('EMPLOYEE')")
     public ResponseEntity<?> findByIdVO(@PathVariable int id) {
         Optional<Vaccine> vaccine = vaccineService.findById(id);
         if(vaccine.isPresent())
@@ -60,6 +65,7 @@ public class VaccineController {
                 .build(), ResponseEntity.notFound().build().getStatusCode());
     }
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('EMPLOYEE')")
     public ResponseEntity<?> findById(@PathVariable int id) {
         Optional<Vaccine> vaccine = vaccineService.findById(id);
         if(vaccine.isPresent())
@@ -74,6 +80,7 @@ public class VaccineController {
                 .build(), ResponseEntity.notFound().build().getStatusCode());
     }
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> delete(@PathVariable int id) {
         Optional <Vaccine> vaccine = vaccineService.findById(id);
         if(!vaccine.isPresent())
