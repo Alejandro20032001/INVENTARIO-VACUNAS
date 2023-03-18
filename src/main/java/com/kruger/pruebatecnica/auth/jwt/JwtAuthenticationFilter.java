@@ -31,10 +31,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         try {
             UsernamePasswordAuthenticationToken PAToken =
                     new UsernamePasswordAuthenticationToken(
-                            authCredentials.getEmail(),
+                            authCredentials.getUsername(),
                             authCredentials.getContrasena(),
                             Collections.emptyList());
-            System.out.println("USERNAME: "+authCredentials.getEmail());
+            System.out.println("USERNAME: "+authCredentials.getUsername());
             System.out.println("PASSWORD: "+authCredentials.getContrasena());
             return getAuthenticationManager().authenticate(PAToken);
         }catch (

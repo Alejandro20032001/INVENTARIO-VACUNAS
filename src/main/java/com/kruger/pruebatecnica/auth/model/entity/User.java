@@ -90,8 +90,11 @@ public class User implements UserDetails {
     }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        System.out.println("llega aqui");
+        System.out.println(rols.toString());
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
         for(Rol rol: rols){
+            System.out.println(rol.getRolName());
             authorities.add(new SimpleGrantedAuthority(rol.getRolName().toString()));
         }
         return authorities;

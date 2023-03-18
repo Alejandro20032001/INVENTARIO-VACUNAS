@@ -43,6 +43,11 @@ public interface UserRepository extends JpaRepository<User, Integer> {
             WHERE u.delete = false AND ui.delete = false AND v.delete = false
             AND va.name = :vaccineName""", nativeQuery = true)
     List findByVaccineName(@Param("vaccineName") String vaccineName);
-    Optional<User> findByUsername(String username);
+    @Query(value = """
+            SELECT u.*\s
+            FROM public.user u \s
+            WHERE u.delete = false AND
+            u.username = :username""", nativeQuery = true)
+    Optional<User> findByUsername(@Param("username") String username);
     boolean existsByUsername(String username);
 }

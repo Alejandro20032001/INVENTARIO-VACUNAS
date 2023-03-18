@@ -33,7 +33,7 @@ public class JwtTokenUtils {
         User userDetails =new User();
         Claims claims = getClaims(token);
         String subject =claims.getSubject();
-        String roles = (String) claims.get("roles");
+        String roles = (String) claims.get("rols");
 
         roles = roles.replace("[", "").replace("]", "");
         String[] roleNames = roles.split(",");

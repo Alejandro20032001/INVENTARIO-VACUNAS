@@ -115,12 +115,13 @@ public class UserServiceImpl implements UserService{
         String password = passwordGenerator();
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-        password = passwordEncoder.encode(password);
+        String passwordBcrypt = passwordEncoder.encode(password);
         user.setUsername(username);
-        user.setPassword(password);
+        user.setPassword(passwordBcrypt);
         user.setUserInformation(userInformation);
         user = userRepository.save(user);
-
+        System.out.println("Password: "+password);
+        user.setPassword(password);
         return entityToVO(user);
     }
     @Override
