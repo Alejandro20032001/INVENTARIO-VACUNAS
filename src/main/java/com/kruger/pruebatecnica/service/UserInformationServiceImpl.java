@@ -2,10 +2,13 @@ package com.kruger.pruebatecnica.service;
 
 import com.kruger.pruebatecnica.model.entity.UserInformation;
 import com.kruger.pruebatecnica.model.entity.Vaccination;
-import com.kruger.pruebatecnica.model.pojo.dto.UserInformationDTO;
+import com.kruger.pruebatecnica.model.entity.Vaccine;
+import com.kruger.pruebatecnica.model.pojo.dto.RegisterUserDTO;
+import com.kruger.pruebatecnica.model.pojo.dto.UpdateInformationDTO;
 import com.kruger.pruebatecnica.model.pojo.vo.UserInformationVO;
 import com.kruger.pruebatecnica.model.repository.UserInformationRepository;
 import com.kruger.pruebatecnica.model.repository.VaccinationRepository;
+import com.kruger.pruebatecnica.model.repository.VaccineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +18,12 @@ import java.util.Optional;
 public class UserInformationServiceImpl implements UserInformationService{
     private final UserInformationRepository userInformationRepository;
     private final VaccinationRepository vaccinationRepository;
+    private final VaccineRepository vaccineRepository;
     @Autowired
-    public UserInformationServiceImpl(UserInformationRepository userInformationRepository, VaccinationRepository vaccinationRepository) {
+    public UserInformationServiceImpl(UserInformationRepository userInformationRepository, VaccinationRepository vaccinationRepository, VaccineRepository vaccineRepository) {
         this.userInformationRepository = userInformationRepository;
         this.vaccinationRepository = vaccinationRepository;
+        this.vaccineRepository = vaccineRepository;
     }
 
     @Override
@@ -39,7 +44,16 @@ public class UserInformationServiceImpl implements UserInformationService{
     }
 
     @Override
-    public UserInformationVO persistUserInformation(UserInformationDTO userInformationDTO) {
+    public UserInformation persistUserInformation(RegisterUserDTO registerUserDTO) {
+
+        UserInformation userInformation = new UserInformation();
+        userInformation.setName(registerUserDTO.getName());
+        userInformation.setLastName(registerUserDTO.getLastName());
+        userInformation.setEmail(registerUserDTO.getEmail());
+        userInformation.setDni(registerUserDTO.getDni());
+
+        userInformationRepository.save(userInformation);
+        /*
         UserInformationVO userInformationVO = null;
         Optional<Vaccination> vaccination = vaccinationRepository.findById(userInformationDTO.getIdVaccination());
         if(vaccination.isPresent()) {
@@ -52,8 +66,8 @@ public class UserInformationServiceImpl implements UserInformationService{
             userInformation.setAddress(userInformationDTO.getAddress());
             userInformation.setPhone(userInformationDTO.getPhone());
             userInformation.setDni(userInformationDTO.getDni());
-        }
-        return userInformationVO;
+        }*/
+        return userInformation;
     }
 
     @Override
@@ -62,20 +76,23 @@ public class UserInformationServiceImpl implements UserInformationService{
     }
 
     @Override
-    public void updateUserInformation(int idUserInformation, UserInformationDTO userInformationDTO) {
+    public UserInformationVO updateUserInformation(int idUserInformation, UpdateInformationDTO updateInformationDTO) {
         Optional<UserInformation> userInformation = findById(idUserInformation);
+        Optional<Vaccine> vaccine = vaccineRepository.findById(updateInformationDTO.getIdVaccine());
         if(userInformation.isPresent()) {
-            Optional<Vaccination> vaccination = vaccinationRepository.findById(userInformationDTO.getIdVaccination());
-            userInformation.get().setName(userInformationDTO.getName());
-            userInformation.get().setLastName(userInformationDTO.getLastName());
-            userInformation.get().setEmail(userInformationDTO.getEmail());
-            userInformation.get().setBirthDate(userInformationDTO.getBirthDate());
-            userInformation.get().setAddress(userInformationDTO.getAddress());
-            userInformation.get().setPhone(userInformationDTO.getPhone());
-            userInformation.get().setDni(userInformationDTO.getDni());
-            userInformation.get().setVaccination(vaccination.get());
+            Vaccination vaccination = new Vaccination();
+            vaccination.setDoseNumber(updateInformationDTO.getDoseNumber());
+            vaccination.setVaccinationDate(updateInformationDTO.getVaccinationDate());
+            if(vaccine.isPresent())
+                vaccination.setVaccine(vaccine.get());
+
+            userInformation.get().setBirthDate(updateInformationDTO.getBirthDate());
+            userInformation.get().setAddress(updateInformationDTO.getAddress());
+            userInformation.get().setPhone(updateInformationDTO.getPhone());
+            userInformation.get().setVaccination(vaccination);
             userInformationRepository.save(userInformation.get());
         }
+        return entityToVO(userInformation.get());
     }
     @Override
     public UserInformationVO entityToVO(UserInformation userInformation) {
