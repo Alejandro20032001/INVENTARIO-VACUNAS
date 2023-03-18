@@ -16,4 +16,9 @@ public class Rol {
 
     @NotNull
     private String rolName;
+
+    @Override
+    public String toString(){
+        return rolName;
+    }
 }
