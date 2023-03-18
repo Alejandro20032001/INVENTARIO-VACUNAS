@@ -3,6 +3,7 @@ package com.kruger.pruebatecnica.controller;
 import com.kruger.pruebatecnica.auth.model.entity.User;
 import com.kruger.pruebatecnica.auth.service.UserService;
 import com.kruger.pruebatecnica.commons.ResultResponse;
+import com.kruger.pruebatecnica.model.pojo.dto.FilterDateDTO;
 import com.kruger.pruebatecnica.model.pojo.dto.RegisterUserDTO;
 import com.kruger.pruebatecnica.model.pojo.vo.UserVO;
 import lombok.extern.log4j.Log4j2;
@@ -122,6 +123,14 @@ public class UserController {
         return new ResponseEntity<>(ResultResponse.builder()
                 .status(true)
                 .message("Delete successful")
+                .build(), ResponseEntity.ok().build().getStatusCode());
+    }
+    @GetMapping("/by-date")
+    //@PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<?> findAllByDate(@RequestBody FilterDateDTO filterDateDTO) {
+        return new ResponseEntity<>(ResultResponse.builder()
+                .status(true)
+                .data(userService.dateFilter(filterDateDTO))
                 .build(), ResponseEntity.ok().build().getStatusCode());
     }
 }
