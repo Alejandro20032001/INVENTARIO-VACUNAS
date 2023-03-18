@@ -1,6 +1,7 @@
 package com.kruger.pruebatecnica.controller;
 
 import com.kruger.pruebatecnica.auth.model.entity.Rol;
+import com.kruger.pruebatecnica.auth.model.repository.RolRepository;
 import com.kruger.pruebatecnica.commons.ResultResponse;
 import com.kruger.pruebatecnica.model.enums.HttpResponseMessage;
 import com.kruger.pruebatecnica.model.pojo.dto.RegisterUserDTO;
@@ -19,14 +20,16 @@ import java.util.List;
 @RequestMapping("/testing")
 public class TestingController {
     private final UserService userService;
+    private final RolRepository rolRepository;
+
     @Autowired
-    public TestingController(UserService userService) {
+    public TestingController(UserService userService,
+                             RolRepository rolRepository) {
         this.userService = userService;
+        this.rolRepository = rolRepository;
     }
     @GetMapping("/test")
     public ResponseEntity<?> test() {
-        //System.out.println(userService.findById(2));
-        System.out.println(userService.findAllVaccinated());
         List<UserVO> list = userService.findAllVaccinated();
         ResponseEntity<?> responseEntity;
         if (list.size()==0)
@@ -71,8 +74,14 @@ public class TestingController {
 
         Rol rol = new Rol();
         rol.setRolName("ADMIN");
+        rolRepository.save(rol);
+
+        Rol rol1 = new Rol();
+        rol1.setRolName("EMPLOYEE");
+        rolRepository.save(rol1);
 
         UserVO userVO = userService.persistUser(registerUserDTO);
+
         return new ResponseEntity<>(ResultResponse.builder()
                 .status(true)
                 .message(HttpResponseMessage.FIND_SUCCESSFUL.getValue())
