@@ -15,14 +15,14 @@ import java.util.Date;
 public class JwtTokenUtils {
 
     private static final long EXPIRE_TIME_DURATION = 2 * 60 * 60* 1000; //2horas.
-    private static final String ACCESS_TOKEN_SECRET= "abcdefghijklmnOPQRSTUVWXYZ";
+    private static final String ACCESS_TOKEN_SECRET= "$2a$12$JTfIoPcl28jeEFio3aHBa.rcqtBUgvykiKYgKxvikVzzxVAt82CEu";
 
     public static String createToken(UserDetailImpl user){
         Date fechaExpiracion =new Date(System.currentTimeMillis() + EXPIRE_TIME_DURATION);
 
         return Jwts.builder().setSubject(user.getUsername())
                 .setExpiration(fechaExpiracion)
-                .claim("roles", user.getRols())
+                .claim("rols", user.getRols())
                 .signWith(Keys.hmacShaKeyFor(ACCESS_TOKEN_SECRET.getBytes()))
                 .compact();
     }
@@ -41,7 +41,6 @@ public class JwtTokenUtils {
         for (String aRoleName : roleNames) {
 
             aRoleName = aRoleName.trim();
-            System.out.println("rol actual: "+ aRoleName);
             Rol rol = new Rol();
             rol.setRolName(aRoleName);
             userDetails.addRol(rol);
