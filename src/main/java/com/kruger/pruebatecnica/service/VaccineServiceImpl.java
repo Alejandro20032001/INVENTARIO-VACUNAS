@@ -35,27 +35,22 @@ public class VaccineServiceImpl implements VaccineService{
     }
     @Override
     public Optional<VaccineVO> findByIdVO(int id) {
-        Vaccine vaccine = vaccineRepository.findById(id).get();
-        Optional optional = Optional.empty();
-        if(vaccine != null)
-            optional = Optional.of(entityToVO(vaccine));
-
-        return optional;
+        Optional<Vaccine> vaccine = vaccineRepository.findById(id);
+        if(vaccine.isPresent())
+            return Optional.of(entityToVO(vaccine.get()));
+        return Optional.empty();
     }
     @Override
     public Optional<Vaccine> findById(int id) {
-        Vaccine vaccine = vaccineRepository.findById(id).get();
-        Optional optional = Optional.empty();
-        if(vaccine != null)
-            optional = Optional.of(vaccine);
-
-        return optional;
+        return vaccineRepository.findById(id);
     }
 
     @Override
     public VaccineVO persistVaccine(VaccineDTO vaccineDTO) {
         Vaccine vaccine = new Vaccine();
+        vaccineDTO.setName(vaccineDTO.getName().toUpperCase());
         BeanUtils.copyProperties(vaccineDTO, vaccine);
+
         return entityToVO(vaccineRepository.save(vaccine));
     }
 
