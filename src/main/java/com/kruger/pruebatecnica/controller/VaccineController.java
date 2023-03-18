@@ -1,12 +1,15 @@
 package com.kruger.pruebatecnica.controller;
 
 import com.kruger.pruebatecnica.commons.ResultResponse;
+import com.kruger.pruebatecnica.model.entity.Vaccine;
 import com.kruger.pruebatecnica.model.pojo.dto.VaccineDTO;
 import com.kruger.pruebatecnica.service.VaccineService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @Log4j2
 @RestController
@@ -18,7 +21,7 @@ public class VaccineController {
         this.vaccineService = vaccineService;
     }
 
-    @GetMapping("/all/vo")
+    @GetMapping("/vo")
     public ResponseEntity<?> findAllVO() {
         return new ResponseEntity<>(ResultResponse.builder()
                 .status(true)
@@ -44,23 +47,40 @@ public class VaccineController {
     }
     @GetMapping("/vo/{id}")
     public ResponseEntity<?> findByIdVO(@PathVariable int id) {
+        Optional<Vaccine> vaccine = vaccineService.findById(id);
+        if(vaccine.isPresent())
+            return new ResponseEntity<>(ResultResponse.builder()
+                    .status(true)
+                    .message("Find successful")
+                    .data(vaccine.get())
+                    .build(), ResponseEntity.ok().build().getStatusCode());
         return new ResponseEntity<>(ResultResponse.builder()
-                .status(true)
-                .message("Find successful")
-                .data(vaccineService.findByIdVO(id))
-                .build(), ResponseEntity.ok().build().getStatusCode());
+                .status(false)
+                .message("Not found")
+                .build(), ResponseEntity.notFound().build().getStatusCode());
     }
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable int id) {
+        Optional<Vaccine> vaccine = vaccineService.findById(id);
+        if(vaccine.isPresent())
+            return new ResponseEntity<>(ResultResponse.builder()
+                    .status(true)
+                    .message("Find successful")
+                    .data(vaccine.get())
+                    .build(), ResponseEntity.ok().build().getStatusCode());
         return new ResponseEntity<>(ResultResponse.builder()
-                .status(true)
-                .message("Find successful")
-                .data(vaccineService.findById(id))
-                .build(), ResponseEntity.ok().build().getStatusCode());
+                .status(false)
+                .message("Not found")
+                .build(), ResponseEntity.notFound().build().getStatusCode());
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable int id) {
-        vaccineService.deleteVaccine(id);
+        Optional <Vaccine> vaccine = vaccineService.findById(id);
+        if(!vaccine.isPresent())
+            return new ResponseEntity<>(ResultResponse.builder()
+                    .status(false)
+                    .message("Not found")
+                    .build(), ResponseEntity.notFound().build().getStatusCode());
         return new ResponseEntity<>(ResultResponse.builder()
                 .status(true)
                 .message("Delete successful")
