@@ -1,10 +1,17 @@
 package com.kruger.pruebatecnica.controller;
 
+import com.kruger.pruebatecnica.commons.ResultResponse;
+import com.kruger.pruebatecnica.model.entity.User;
+import com.kruger.pruebatecnica.model.pojo.dto.RegisterUserDTO;
+import com.kruger.pruebatecnica.model.pojo.dto.UserDTO;
+import com.kruger.pruebatecnica.model.pojo.vo.UserVO;
 import com.kruger.pruebatecnica.service.UserService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @Log4j2
 @RestController
@@ -16,4 +23,94 @@ public class UserController {
         this.userService = userService;
     }
 
+    @GetMapping("/vo")
+    public ResponseEntity<?> findAllVO() {
+        return new ResponseEntity<>(ResultResponse.builder()
+                .status(true)
+                .message("Find successful")
+                .data(userService.findAllVO())
+                .build(), ResponseEntity.ok().build().getStatusCode());
+    }
+    @GetMapping("")
+    public ResponseEntity<?> findAll() {
+        return new ResponseEntity<>(ResultResponse.builder()
+                .status(true)
+                .message("Find successful")
+                .data(userService.findAll())
+                .build(), ResponseEntity.ok().build().getStatusCode());
+    }
+    @GetMapping("/vo/{id}")
+    public ResponseEntity<?> findByIdVO(@PathVariable int id) {
+        Optional<UserVO> user = userService.findByIdVO(id);
+        if (user.isPresent())
+            return new ResponseEntity<>(ResultResponse.builder()
+                    .status(true)
+                    .message("Find successful")
+                    .data(user.get())
+                    .build(), ResponseEntity.ok().build().getStatusCode());
+        return new ResponseEntity<>(ResultResponse.builder()
+                .status(false)
+                .message("Not found")
+                .build(), ResponseEntity.notFound().build().getStatusCode());
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findById(@PathVariable int id) {
+        Optional<User> user = userService.findById(id);
+        if (user.isPresent())
+            return new ResponseEntity<>(ResultResponse.builder()
+                    .status(true)
+                    .message("Find successful")
+                    .data(user.get())
+                    .build(), ResponseEntity.ok().build().getStatusCode());
+        return new ResponseEntity<>(ResultResponse.builder()
+                .status(false)
+                .message("Not found")
+                .build(), ResponseEntity.notFound().build().getStatusCode());
+    }
+    @GetMapping("vaccinated")
+    public ResponseEntity<?> findAllVaccinated() {
+        return new ResponseEntity<>(ResultResponse.builder()
+                .status(true)
+                .message("Find successful")
+                .data(userService.findAllVaccinated())
+                .build(), ResponseEntity.ok().build().getStatusCode());
+    }
+    @GetMapping("/non-vaccinated")
+    public ResponseEntity<?> findAllNonVaccinated() {
+        return new ResponseEntity<>(ResultResponse.builder()
+                .status(true)
+                .message("Find successful")
+                .data(userService.findAllNotVaccinated())
+                .build(), ResponseEntity.ok().build().getStatusCode());
+    }
+    @GetMapping("/by-vaccine-name/{id}")
+    public ResponseEntity<?> findAllByVaccineName(@PathVariable int id) {
+        return new ResponseEntity<>(ResultResponse.builder()
+                .status(true)
+                .message("Find successful")
+                .data(userService.findByVaccine(id))
+                .build(), ResponseEntity.ok().build().getStatusCode());
+    }
+    @PostMapping("")
+    public ResponseEntity<?> save(@RequestBody RegisterUserDTO userDTO) {
+        return new ResponseEntity<>(ResultResponse.builder()
+                .status(true)
+                .message("Find successful")
+                .data(userService.persistUser(userDTO))
+                .build(), ResponseEntity.ok().build().getStatusCode());
+    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable int id) {
+        Optional<User> user = userService.findById(id);
+        if (!user.isPresent())
+            return new ResponseEntity<>(ResultResponse.builder()
+                    .status(false)
+                    .message("Not found")
+                    .build(), ResponseEntity.notFound().build().getStatusCode());
+        userService.deleteUser(id);
+        return new ResponseEntity<>(ResultResponse.builder()
+                .status(true)
+                .message("Delete successful")
+                .build(), ResponseEntity.ok().build().getStatusCode());
+    }
 }
