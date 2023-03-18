@@ -1,6 +1,7 @@
 package com.kruger.pruebatecnica.auth.service;
 
 import com.kruger.pruebatecnica.auth.model.entity.User;
+import com.kruger.pruebatecnica.model.pojo.dto.FilterDateDTO;
 import com.kruger.pruebatecnica.model.pojo.dto.RegisterUserDTO;
 import com.kruger.pruebatecnica.model.pojo.dto.UserDTO;
 import com.kruger.pruebatecnica.model.pojo.vo.UserVO;
@@ -25,4 +26,6 @@ public interface UserService {
     UserVO entityToVO (User user);
     Optional <User> findByUsername(String username);
     Boolean existsByUsername(String username);
+
+    List<User> dateFilter(FilterDateDTO filterDateDTO);
 }

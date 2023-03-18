@@ -4,6 +4,7 @@ import com.kruger.pruebatecnica.auth.model.entity.User;
 import com.kruger.pruebatecnica.auth.model.repository.UserRepository;
 import com.kruger.pruebatecnica.model.entity.UserInformation;
 import com.kruger.pruebatecnica.model.entity.Vaccine;
+import com.kruger.pruebatecnica.model.pojo.dto.FilterDateDTO;
 import com.kruger.pruebatecnica.model.pojo.dto.RegisterUserDTO;
 import com.kruger.pruebatecnica.model.pojo.vo.UserInformationVO;
 import com.kruger.pruebatecnica.model.pojo.vo.UserVO;
@@ -197,5 +198,18 @@ public class UserServiceImpl implements UserService{
             System.out.println(e.toString());
         }
         return "";
+    }
+    @Override
+    public List<User> dateFilter(FilterDateDTO filterDateDTO){
+        List<User> listUsers = userRepository.findAll();
+        for(User user: listUsers){
+            if(user.getUserInformation().getVaccination() != null){
+                if(user.getUserInformation().getVaccination().getVaccinationDate().after(filterDateDTO.getStartDate()) &&
+                        user.getUserInformation().getVaccination().getVaccinationDate().before(filterDateDTO.getEndDate())){
+                    listUsers.add(user);
+                }
+            }
+        }
+        return listUsers;
     }
 }
