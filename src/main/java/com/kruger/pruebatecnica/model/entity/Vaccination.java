@@ -12,7 +12,6 @@ import java.util.Date;
 @Getter
 @Setter
 @Table(name = "vaccination")
-@Where(clause = "delete=false")
 public class Vaccination {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
