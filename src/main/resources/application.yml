@@ -1,13 +1,13 @@
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/siptis
+    url: jdbc:postgresql://localhost:5432/inventario-vacunas
     username: postgres
     password: serrano123
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: true
+      ddl-auto: none
     show-sql: true
     properties:
       hibernate:
