@@ -2,8 +2,8 @@ package com.kruger.pruebatecnica.service;
 
 import com.kruger.pruebatecnica.model.entity.User;
 import com.kruger.pruebatecnica.model.entity.UserInformation;
-import com.kruger.pruebatecnica.model.entity.Vaccination;
 import com.kruger.pruebatecnica.model.entity.Vaccine;
+import com.kruger.pruebatecnica.model.pojo.dto.RegisterUserDTO;
 import com.kruger.pruebatecnica.model.pojo.dto.UserDTO;
 import com.kruger.pruebatecnica.model.pojo.vo.UserInformationVO;
 import com.kruger.pruebatecnica.model.pojo.vo.UserVO;
@@ -14,27 +14,50 @@ import com.kruger.pruebatecnica.model.repository.UserRepository;
 import com.kruger.pruebatecnica.model.repository.VaccineRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
     private final UserInformationRepository userInformationRepository;
     private final VaccineRepository vaccineRepository;
+    private final UserInformationService userInformationService;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, UserInformationRepository userInformationRepository, VaccineRepository vaccineRepository) {
+    public UserServiceImpl(UserRepository userRepository, UserInformationRepository userInformationRepository, VaccineRepository vaccineRepository, UserInformationService userInformationService) {
         this.userRepository = userRepository;
         this.userInformationRepository = userInformationRepository;
         this.vaccineRepository = vaccineRepository;
+        this.userInformationService = userInformationService;
     }
     @Override
-    public Optional<UserVO> findById(int id) {
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
+    @Override
+    public List<UserVO> findAllVO(){
+        List<User> list = userRepository.findAll();
+        List<UserVO> listVO = new ArrayList<>();
+        for(User user: list){
+            listVO.add(entityToVO(user));
+        }
+        return listVO;
+    }
+    @Override
+    public Optional<User> findById(int id) {
+        User user = userRepository.findById(id).get();
+        if(user != null)
+            return Optional.of(user);
+        else
+            return Optional.empty();
+    }
+    @Override
+    public Optional<UserVO> findByIdVO(int id) {
         User user = userRepository.findById(id).get();
         if(user != null)
             return Optional.of(entityToVO(user));
@@ -70,27 +93,34 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public List<UserVO> findByVaccine(int idVaccine) {
-        Vaccine vaccine = vaccineRepository.findById(idVaccine).get();
-        String vaccineName = vaccine.getName();
-        List<Object[]> listUsers = userRepository.findByVaccineName(vaccineName);
-        List<UserVO> listUserVO = new ArrayList<>();
-        for(Object[] o: listUsers){
-            UserVO userVO = objectToVO(o);
-            listUserVO.add(userVO);
+        Optional<Vaccine> vaccine = vaccineRepository.findById(idVaccine);
+        if (vaccine.isPresent()) {
+            List<Object[]> listUsers = userRepository.findByVaccineName(vaccine.get().getName());
+            List<UserVO> listUserVO = new ArrayList<>();
+            for (Object[] o : listUsers) {
+                UserVO userVO = objectToVO(o);
+                listUserVO.add(userVO);
+            }
+            return listUserVO;
         }
-        return listUserVO;
+
+        return new ArrayList<>();
     }
     @Override
-    public UserVO persistUser(UserDTO userDTO) {
-        User user = null;
-        Optional <UserInformation> userInformation = userInformationRepository.findById(userDTO.getIdUserInformation());
-        if(userInformation.isPresent()){
-            user = new User();
-            user.setUsername(userDTO.getUsername());
-            user.setPassword(userDTO.getPassword());
-            user.setUserInformation(userInformation.get());
-            user = userRepository.save(user);
-        }
+    public UserVO persistUser(RegisterUserDTO registerUserDTO) {
+        UserInformation userInformation = userInformationService.persistUserInformation(registerUserDTO);
+
+        User user = new User();
+        String username = registerUserDTO.getName() +"_"+registerUserDTO.getLastName();
+        String password = passwordGenerator();
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+        password = passwordEncoder.encode(password);
+        user.setUsername(username);
+        user.setPassword(password);
+        user.setUserInformation(userInformation);
+        user = userRepository.save(user);
+
         return entityToVO(user);
     }
     @Override
@@ -131,5 +161,23 @@ public class UserServiceImpl implements UserService{
 
         userVO.setUserInformationVO(userInformationVO);
         return userVO;
+    }
+    public String passwordGenerator() {
+        String[] symbols = {"_", "d", "-", "*", "%", "$", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k"};
+        int length = 10;
+        Random random;
+        try {
+            random = SecureRandom.getInstanceStrong();
+            StringBuilder sb = new StringBuilder(length);
+            for (int i = 0; i < length; i++) {
+                int indexRandom = random.nextInt ( symbols.length );
+                sb.append( symbols[indexRandom] );
+            }
+            return sb.toString();
+
+        } catch (NoSuchAlgorithmException e){
+            System.out.println(e.toString());
+        }
+        return "";
     }
 }
