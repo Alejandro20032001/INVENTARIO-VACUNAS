@@ -10,6 +10,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -22,10 +23,23 @@ public class VaccinationServiceImpl implements VaccinationService {
         this.vaccineRepository = vaccineRepository;
     }
     @Override
+    public List<Vaccination> findAll(){
+        return vaccinationRepository.findAll();
+    }
+    @Override
+    public List<VaccinationVO> findAllVO() {
+        List<Vaccination> list = vaccinationRepository.findAll();
+        List<VaccinationVO> listVO = null;
+        for (Vaccination vaccination : list) {
+            listVO.add(entityToVO(vaccination));
+        }
+        return listVO;
+    }
+    @Override
     public Optional<VaccinationVO> findByIdVO(int id) {
-        Vaccination vaccination = vaccinationRepository.findById(id).get();
-        if (vaccination != null)
-            return Optional.of(entityToVO(vaccination));
+        Optional<Vaccination> vaccination = vaccinationRepository.findById(id);
+        if (vaccination.isPresent())
+            return Optional.of(entityToVO(vaccination.get()));
         else
             return Optional.empty();
 
