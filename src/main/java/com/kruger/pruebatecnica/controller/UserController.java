@@ -8,8 +8,10 @@ import com.kruger.pruebatecnica.model.pojo.vo.UserVO;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @Log4j2
@@ -23,7 +25,9 @@ public class UserController {
     }
 
     @GetMapping("/vo")
+    //@PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> findAllVO() {
+        List<UserVO> lista = userService.findAllVO();
         return new ResponseEntity<>(ResultResponse.builder()
                 .status(true)
                 .message("Find successful")
@@ -31,6 +35,7 @@ public class UserController {
                 .build(), ResponseEntity.ok().build().getStatusCode());
     }
     @GetMapping("")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> findAll() {
         return new ResponseEntity<>(ResultResponse.builder()
                 .status(true)
